@@ -1,0 +1,6 @@
+ultralytics
+supervision
+opencv-python
+numpy
+pandas==1.5.3
+pandasai==0.6.5
