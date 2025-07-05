@@ -1,14 +1,22 @@
 import numpy as np
+from src.utils.bbox_utils import get_center_of_bbox
 
 class PassDetector:
-    def __init__(self, player_tracks, ball_trajectory, team_assignments=None, possession_threshold=50):
-        self.player_tracks = player_tracks  # list of dicts: frame_num -> {player_id: {'bbox': ...}}
-        self.ball_trajectory = ball_trajectory  # list of (frame_idx, (x, y))
-        self.team_assignments = team_assignments  # dict: player_id -> team_id
+    def __init__(self, player_tracks, ball_trajectory, \
+        team_assignments=None, possession_threshold=50):
+        # list of dicts: frame_num -> {player_id: {'bbox': ...}}
+        self.player_tracks = player_tracks
+        
+        # list of (frame_idx, (x, y))
+        self.ball_trajectory = ball_trajectory
+        
+        # dict: player_id -> team_id
+        self.team_assignments = team_assignments
+        
+        # threshold for possession detection
         self.possession_threshold = possession_threshold
 
     def get_possession(self):
-        from utils.bbox_utils import get_center_of_bbox
         possession = []
         for (frame_idx, ball_pos) in self.ball_trajectory:
             min_dist = float('inf')

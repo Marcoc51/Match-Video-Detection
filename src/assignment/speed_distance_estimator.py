@@ -1,6 +1,9 @@
 from src.utils import measure_distance, get_foot_position
 import cv2
 
+# Colors - RGB (Red, Green, Blue) --> BGR (Blue, Green, Red)
+BLACK = (0,0,0)
+
 class SpeedAndDistanceEstimator():
     def __init__(self) -> None:
         self.frame_window = 5
@@ -21,8 +24,8 @@ class SpeedAndDistanceEstimator():
                     if track_id not in object_tracks[last_frame]:
                         continue
 
-                    start_position = object_tracks[frame_num][track_id]['position_transformed']
-                    end_position = object_tracks[last_frame][track_id]['position_transformed']
+                    start_position = object_tracks[frame_num][track_id]['position_adjusted']
+                    end_position = object_tracks[last_frame][track_id]['position_adjusted']
 
                     if start_position is None or end_position is None:
                         continue
@@ -44,9 +47,10 @@ class SpeedAndDistanceEstimator():
                     for frame_num_batch in range(frame_num, last_frame):
                         if track_id not in tracks[object][frame_num_batch]:
                             continue
-                        tracks[object][frame_num_batch][track_id]["speed"] = speed_km_per_hour
-                        tracks[object][frame_num_batch][track_id]["distance"] = total_distance[object][track_id]
-
+                        tracks[object][frame_num_batch][track_id]["speed"] \
+                            = speed_km_per_hour
+                        tracks[object][frame_num_batch][track_id]["distance"] \
+                            = total_distance[object][track_id]
     
     def draw_speed_and_distance(self, frames, tracks):
         output_frames = []
@@ -57,6 +61,11 @@ class SpeedAndDistanceEstimator():
                     continue
 
                 for track_id, track_info in object_tracks[frame_num].items():
+                    # Show for Home team players only
+                    if track_info.get("team", None) != 1:
+                        continue
+                    
+                    # Draw speed and distance
                     if "speed" in track_info:
                         speed = track_info.get('speed', None)
                         distance = track_info.get('distance', None)
@@ -70,7 +79,29 @@ class SpeedAndDistanceEstimator():
                         position[1] += 40
 
                         position = tuple(map(int,position))
-                        cv2.putText(frame, f"{speed:.2f} km/h", position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
-                        cv2.putText(frame, f"{distance:.2f} M", (position[0], position[1]+20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
+                        
+                        # Draw speed
+                        cv2.putText(
+                            frame, 
+                            f"{speed:.2f} km/h", 
+                            position, 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            BLACK, 
+                            2
+                        )
+
+                        # Draw distance
+                        cv2.putText(
+                            frame, 
+                            f"{distance:.2f} M", 
+                            (position[0], position[1]+20), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 
+                            0.5, 
+                            BLACK, 
+                            2
+                        )
+
+            # Add the frame to the output frames
             output_frames.append(frame)
         return output_frames

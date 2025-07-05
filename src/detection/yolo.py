@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-
 from pathlib import Path
 
 # Go up from yolo.py to project root
