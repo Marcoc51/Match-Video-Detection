@@ -62,7 +62,7 @@ class SpeedAndDistanceEstimator():
 
                 for track_id, track_info in object_tracks[frame_num].items():
                     # Show for Home team players only
-                    if track_info.get("team", None) != 1:
+                    if track_info.get("team", None) == 2:
                         continue
                     
                     # Draw speed and distance

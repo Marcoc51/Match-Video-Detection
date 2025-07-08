@@ -6,16 +6,7 @@ import cv2
 import numpy as np
 import pandas as pd
 from src.utils.bbox_utils import get_bbox_width, get_center_of_bbox,get_foot_position
-
-# Colors - RGB (Red, Green, Blue) --> BGR (Blue, Green, Red)
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-BLUE = (255,0,0)
-RED = (0,0,255)
-YELLOW = (0,255,255)
-GREY = (128,128,128)
-ORANGE = (0, 165, 255)
-PINK = (255,0,255)
+from src.utils.colors import *
 
 class Tracker:
     
@@ -192,12 +183,13 @@ class Tracker:
 
         # Get the number of time each team has the ball control
         home_team_num_frames = \
-            team_ball_control_till_frame[team_ball_control_till_frame==1].shape[0]
+            team_ball_control_till_frame[team_ball_control_till_frame == 1].shape[0]
         away_team_num_frames = \
-            team_ball_control_till_frame[team_ball_control_till_frame==2].shape[0]
+            team_ball_control_till_frame[team_ball_control_till_frame == 2].shape[0]
 
         # Get the percentage of time each team has the ball control
         home_team = home_team_num_frames/(home_team_num_frames+away_team_num_frames)
+        away_team = away_team_num_frames/(home_team_num_frames+away_team_num_frames)
 
         # Draw the percentage of time Home team has the ball control
         cv2.putText(
@@ -210,11 +202,28 @@ class Tracker:
             2
         )
 
+        cv2.putText(
+            frame, 
+            f"Away Team Ball Control: {away_team*100:.2f}%", 
+            (1350,950), 
+            cv2.FONT_HERSHEY_SIMPLEX, 
+            1, 
+            BLUE, 
+            2
+        )
+
         return frame
 
     def draw_pass_arrow(self, frame, pos1, pos2):
         # Draw a blue arrow between two points
-        cv2.arrowedLine(frame, pos1, pos2, BLUE, 2, tipLength=0.2)
+        cv2.arrowedLine(
+            frame, 
+            pos1, 
+            pos2, 
+            BLUE, 
+            2, 
+            tipLength=0.2
+        )
 
     def draw_annotations(self, video_frames, tracks, team_ball_control, passes=None):
         self.passes = passes or []

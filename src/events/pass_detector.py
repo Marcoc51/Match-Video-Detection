@@ -1,3 +1,6 @@
+# DEPRECATED: Use PassEvent from pass_event.py for robust pass detection logic.
+# This class is retained for reference only.
+
 import numpy as np
 from src.utils.bbox_utils import get_center_of_bbox
 

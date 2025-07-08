@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from src.utils import measure_distance, measure_xy_distance
 import os 
+from src.utils.colors import *
 
 class CameraMovementEstimator():
 
@@ -108,16 +109,16 @@ class CameraMovementEstimator():
                 (10,30), 
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
-                (0,0,0),
+                BLACK,
                 3
             )
             frame = cv2.putText(
                 frame, 
                 f"Camera Movement Y: {y_movement:.2f}",
-                (10,60), 
+                (10,75), 
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
-                (0,0,0),
+                BLACK,
                 3
             )
 
