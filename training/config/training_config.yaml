@@ -1,0 +1,57 @@
+# Training Configuration for Cross Detection Model
+# This file contains all the parameters for fine-tuning the YOLO model
+
+# MLflow Configuration
+mlflow:
+  tracking_uri: "sqlite:///mlruns.db"  # Local SQLite database for MLflow
+  experiment_name: "box-cross-detection-finetuning"
+  model_registry_name: "box-cross-detection-model"
+  
+# Data Configuration
+data:
+  train_videos_dir: "Videos-Input/Crosses-Trained"
+  test_videos_dir: "Videos-Input/Crosses-Tested"
+  output_dir: "training_outputs"
+  frames_per_second: 1  # Extract 1 frame per second for training
+  image_size: 640  # YOLO input size
+  
+# Model Configuration
+model:
+  base_model: "models/yolo/best.pt"  # Pre-trained model to fine-tune
+  num_classes: 1  # Only detecting box crosses
+  class_names: ["box_cross"]
+  
+# Training Parameters
+training:
+  epochs: 100
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  patience: 20  # Early stopping patience
+  save_period: 10  # Save model every N epochs
+  
+# Data Augmentation
+augmentation:
+  hsv_h: 0.015  # HSV-Hue augmentation
+  hsv_s: 0.7    # HSV-Saturation augmentation
+  hsv_v: 0.4    # HSV-Value augmentation
+  degrees: 0.0   # Image rotation
+  translate: 0.1 # Image translation
+  scale: 0.5     # Image scaling
+  shear: 0.0     # Image shear
+  perspective: 0.0  # Perspective transform
+  flipud: 0.0    # Vertical flip probability
+  fliplr: 0.5    # Horizontal flip probability
+  mosaic: 1.0    # Mosaic augmentation probability
+  mixup: 0.0     # Mixup augmentation probability
+  
+# Validation
+validation:
+  val_split: 0.2  # 20% of training data for validation
+  metrics: ["precision", "recall", "mAP50", "mAP50-95"]
+  
+# Logging
+logging:
+  log_interval: 10  # Log every N batches
+  save_interval: 5  # Save checkpoints every N epochs
+  verbose: True 

@@ -195,3 +195,10 @@ cython_debug/
 
 *.mp4
 *.avi
+*.png
+*.jpg
+*/epoch0.pt
+*/epoch10.pt
+*/epoch20.pt
+*/epoch30.pt
+*/epoch40.pt

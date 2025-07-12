@@ -1,0 +1,6 @@
+names:
+- box_cross
+nc: 1
+path: D:\Programming\My Work\Companies\FC Masar\Work\Projects\Match-Video-Detection\training_outputs
+train: images/train
+val: images/val

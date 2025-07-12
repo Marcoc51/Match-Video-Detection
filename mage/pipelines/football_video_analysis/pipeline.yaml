@@ -1,0 +1,129 @@
+blocks:
+  - name: data_loader
+    type: data_loader
+    uuid: data_loader_block
+    status: active
+    upstream_blocks: []
+    downstream_blocks:
+      - video_processor
+    configuration:
+      file_path: data_loader.py
+      file_source: custom_code
+  - name: video_processor
+    type: transformer
+    uuid: video_processor_block
+    status: active
+    upstream_blocks:
+      - data_loader
+    downstream_blocks:
+      - object_detector
+    configuration:
+      file_path: video_processor.py
+      file_source: custom_code
+  - name: object_detector
+    type: transformer
+    uuid: object_detector_block
+    status: active
+    upstream_blocks:
+      - video_processor
+    downstream_blocks:
+      - tracker
+    configuration:
+      file_path: object_detector.py
+      file_source: custom_code
+  - name: tracker
+    type: transformer
+    uuid: tracker_block
+    status: active
+    upstream_blocks:
+      - object_detector
+    downstream_blocks:
+      - event_detector
+    configuration:
+      file_path: tracker.py
+      file_source: custom_code
+  - name: event_detector
+    type: transformer
+    uuid: event_detector_block
+    status: active
+    upstream_blocks:
+      - tracker
+    downstream_blocks:
+      - visualizer
+    configuration:
+      file_path: event_detector.py
+      file_source: custom_code
+  - name: visualizer
+    type: transformer
+    uuid: visualizer_block
+    status: active
+    upstream_blocks:
+      - event_detector
+    downstream_blocks:
+      - data_exporter
+    configuration:
+      file_path: visualizer.py
+      file_source: custom_code
+  - name: data_exporter
+    type: data_exporter
+    uuid: data_exporter_block
+    status: active
+    upstream_blocks:
+      - visualizer
+    downstream_blocks: []
+    configuration:
+      file_path: data_exporter.py
+      file_source: custom_code
+  - name: api_trigger
+    type: trigger
+    uuid: api_trigger_block
+    status: active
+    upstream_blocks: []
+    downstream_blocks:
+      - data_loader
+    configuration:
+      file_path: api_trigger.py
+      file_source: custom_code
+  - name: quality_checker
+    type: transformer
+    uuid: quality_checker_block
+    status: active
+    upstream_blocks:
+      - object_detector
+    downstream_blocks:
+      - tracker
+    configuration:
+      file_path: quality_checker.py
+      file_source: custom_code
+  - name: metrics_calculator
+    type: transformer
+    uuid: metrics_calculator_block
+    status: active
+    upstream_blocks:
+      - event_detector
+    downstream_blocks:
+      - visualizer
+    configuration:
+      file_path: metrics_calculator.py
+      file_source: custom_code
+  - name: mlflow_logger
+    type: transformer
+    uuid: mlflow_logger_block
+    status: active
+    upstream_blocks:
+      - metrics_calculator
+    downstream_blocks:
+      - data_exporter
+    configuration:
+      file_path: mlflow_logger.py
+      file_source: custom_code
+  - name: notification_sender
+    type: transformer
+    uuid: notification_sender_block
+    status: active
+    upstream_blocks:
+      - data_exporter
+    downstream_blocks: []
+    configuration:
+      file_path: notification_sender.py
+      file_source: custom_code 
