@@ -8,11 +8,9 @@ tracking algorithms, track management, and tracking utilities.
 from .tracker import Tracker
 from .track_manager import TrackManager
 from .tracking_result import TrackingResult
-from .tracking_utils import TrackingUtils
 
 __all__ = [
     'Tracker',
     'TrackManager',
-    'TrackingResult',
-    'TrackingUtils'
+    'TrackingResult'
 ]

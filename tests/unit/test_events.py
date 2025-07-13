@@ -12,6 +12,7 @@ from src.events.cross_detector import CrossDetector
 from src.events.entities import Player, Team, Ball
 
 
+@pytest.mark.unit
 class TestPassEvent:
     """Test pass event detection."""
     
@@ -160,6 +161,7 @@ class TestPassEvent:
         assert len(sample_teams[1].passes) == 0
 
 
+@pytest.mark.unit
 class TestPossessionTracker:
     """Test possession tracking."""
     
@@ -297,6 +299,7 @@ class TestPossessionTracker:
         assert times["AWY"] == 0.0
 
 
+@pytest.mark.unit
 class TestCrossDetector:
     """Test cross detection."""
     

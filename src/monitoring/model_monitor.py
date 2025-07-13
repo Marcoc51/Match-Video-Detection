@@ -35,19 +35,7 @@ from .metrics_collector import MetricsCollector
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class MonitoringEvent:
-    """Represents a monitoring event."""
-    timestamp: datetime
-    event_type: str  # 'threshold_violation', 'model_degradation', 'system_alert'
-    severity: str    # 'low', 'medium', 'high', 'critical'
-    metric_name: str
-    current_value: float
-    threshold_value: float
-    message: str
-    job_id: Optional[str] = None
-    model_version: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+from .entities import MonitoringEvent
 
 
 class ModelMonitor:

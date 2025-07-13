@@ -11,6 +11,23 @@ from .detection_result import DetectionResult, Detection
 from ..core.config import Config
 
 
+def filter_detections_by_confidence(
+    detections: List[Dict[str, Any]], 
+    threshold: float = 0.5
+) -> List[Dict[str, Any]]:
+    """
+    Filter detections by confidence threshold.
+    
+    Args:
+        detections: List of detection dictionaries
+        threshold: Confidence threshold (0.0 to 1.0)
+        
+    Returns:
+        Filtered list of detections
+    """
+    return [det for det in detections if det.get('confidence', 0.0) >= threshold]
+
+
 class DetectionUtils:
     """
     Utility class for detection processing and analysis.

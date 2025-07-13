@@ -145,6 +145,13 @@ def main(
     team_list = list(teams.values())
 
     # --- Possession Tracker ---
+    if not team_list:
+        print("Warning: No teams found. Creating default teams.")
+        # Create default teams if none were found
+        teams[1] = Team(name="Home", abbreviation="T01", color=RED)
+        teams[2] = Team(name="Away", abbreviation="T02", color=BLUE)
+        team_list = list(teams.values())
+    
     team_abbrs = [team.abbreviation for team in team_list]
     possession_tracker = PossessionTracker(team_ids=team_abbrs, fps=30)
     running_home_pct = []
@@ -227,7 +234,19 @@ def main(
     # --- Cross Detection ---
     if crosses:
         cross_detector = CrossDetector()
-        cross_events = cross_detector.detect_crosses(tracks, video_frames)
+        # Get frame shape from the first frame
+        frame_shape = video_frames[0].shape if video_frames else (1080, 1920, 3)
+        # Convert all_passes to the format expected by detect_crosses
+        pass_objects = []
+        for team_name, start_bbox, end_bbox in all_passes:
+            # Create a simple pass object with the required attributes
+            class PassObject:
+                def __init__(self, start_bbox, end_bbox):
+                    self.start_ball_bbox = start_bbox
+                    self.end_ball_bbox = end_bbox
+            pass_objects.append(PassObject(start_bbox, end_bbox))
+        
+        cross_events = cross_detector.detect_crosses(pass_objects, frame_shape)
         print(f"Crosses detected: {len(cross_events)}")
 
     # --- Visualization ---

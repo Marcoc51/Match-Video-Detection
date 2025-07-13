@@ -110,7 +110,7 @@ async def log_requests(request: Request, call_next):
 # For local development: run with `python -m src.api.main`
 if __name__ == "__main__":
     uvicorn.run(
-        "src.api.main:app",
+        app,
         host=config.host,
         port=config.port,
         reload=config.reload

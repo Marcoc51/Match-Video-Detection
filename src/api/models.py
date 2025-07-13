@@ -189,4 +189,10 @@ class MonitoringConfigRequest(BaseModel):
     monitoring_interval: Optional[int] = Field(None, description="Monitoring interval in seconds")
     metrics_retention_days: Optional[int] = Field(None, description="Metrics retention period in days")
     alerts_enabled: Optional[bool] = Field(None, description="Enable/disable alerts")
-    workflows_enabled: Optional[bool] = Field(None, description="Enable/disable workflows") 
+    workflows_enabled: Optional[bool] = Field(None, description="Enable/disable workflows")
+
+
+# Alias classes for backward compatibility with tests
+JobStatus = ProcessingStatus
+JobRequest = ProcessingJob
+JobResponse = ProcessingResult 

@@ -5,7 +5,8 @@ Configuration management for the API.
 import os
 from pathlib import Path
 from typing import Optional
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 class APIConfig(BaseSettings):
@@ -65,6 +66,7 @@ class APIConfig(BaseSettings):
     class Config:
         env_file = ".env"
         env_prefix = "API_"
+        protected_namespaces = ('settings_',)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -87,11 +89,11 @@ class APIConfig(BaseSettings):
     def project_root(self) -> Path:
         """Get the project root directory."""
         # Try to find project root by looking for key files
-        current = Path(__file__).parent
-        while current.parent != current:
-            if (current / "main.py").exists() or (current / "requirements.txt").exists():
-                return current
-            current = current.parent
+        current = Path(__file__).parent  # src/api
+        current = current.parent  # src
+        current = current.parent  # project root
+        if (current / "main.py").exists() or (current / "requirements.txt").exists():
+            return current
         return Path.cwd()
     
     @property

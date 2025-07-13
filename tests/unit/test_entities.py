@@ -9,6 +9,7 @@ from src.events.entities import Player, Team, Ball
 from src.utils.colors import RED, BLUE, YELLOW
 
 
+@pytest.mark.unit
 class TestTeam:
     """Test Team class."""
     
@@ -66,6 +67,7 @@ class TestTeam:
         assert "HOM" in str_repr
 
 
+@pytest.mark.unit
 class TestPlayer:
     """Test Player class."""
     
@@ -165,6 +167,7 @@ class TestPlayer:
         assert player1 != player3
 
 
+@pytest.mark.unit
 class TestBall:
     """Test Ball class."""
     

@@ -1,0 +1,36 @@
+
+        <html>
+        <head>
+            <title>Model Monitoring Dashboard</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h1 { color: #2c3e50; }
+                table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; }
+                th { background-color: #f2f2f2; }
+                .critical { color: #c0392b; font-weight: bold; }
+                .high { color: #e67e22; font-weight: bold; }
+                .medium { color: #f1c40f; font-weight: bold; }
+                .low { color: #27ae60; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <h1>Model Monitoring Dashboard</h1>
+            <h2>Status: <span style="color:red">Stopped</span></h2>
+            <h3>Performance Metrics</h3>
+            <table>
+                <tr><th>Metric</th><th>Value</th></tr>
+                <tr><td>total_predictions</td><td>0</td></tr><tr><td>successful_predictions</td><td>0</td></tr><tr><td>failed_predictions</td><td>0</td></tr><tr><td>average_confidence</td><td>0.0</td></tr><tr><td>average_processing_time</td><td>0.0</td></tr><tr><td>model_accuracy</td><td>0.0</td></tr><tr><td>system_uptime</td><td>0.0</td></tr>
+            </table>
+            <h3>Recent Events</h3>
+            <table>
+                <tr><th>Timestamp</th><th>Event Type</th><th>Metric</th><th>Value</th><th>Severity</th><th>Message</th></tr>
+                
+            </table>
+            <h3>Threshold Violations</h3>
+            <p>Total: 0</p>
+            <h3>Metric History Summary</h3>
+            <pre>{}</pre>
+        </body>
+        </html>
+        

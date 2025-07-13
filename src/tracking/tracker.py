@@ -106,38 +106,55 @@ class Tracker:
             tracks['referees'].append({})
             tracks['ball'].append({})
             
-            # Convert to supervision format for tracking
-            detection_supervision = sv.Detections.from_ultralytics(detection_result)
-            
-            # Convert goalkeeper to player for tracking
-            class_names = detection_result.names
-            class_names_inv = {v.lower(): k for k, v in class_names.items()}
-            
-            for object_idx, class_id in enumerate(detection_supervision.class_id):
-                if class_names[class_id] == "goalkeeper":
-                    detection_supervision.class_id[object_idx] = class_names_inv['player']
-            
-            # Track objects using ByteTrack
-            detections_with_tracks = self.tracker.update_with_detections(detection_supervision)
-            
-            # Process tracked objects
-            for detection in detections_with_tracks:
-                bbox = detection[0].tolist()
-                class_id = detection[3]
-                track_id = detection[4]
+            # Convert DetectionResult to supervision format for tracking
+            if len(detection_result.detections) > 0:
+                # Extract data from DetectionResult
+                bboxes = []
+                confidences = []
+                class_ids = []
                 
-                if class_id == class_names_inv['player']:
-                    tracks['players'][frame_num][track_id] = {"bbox": bbox}
-                elif class_id in [class_names_inv['main referee'], class_names_inv['side referee']]:
-                    tracks['referees'][frame_num][track_id] = {"bbox": bbox}
-            
-            # Process ball detections (not tracked by ByteTrack)
-            for detection in detection_supervision:
-                bbox = detection[0].tolist()
-                class_id = detection[3]
+                for detection in detection_result.detections:
+                    bboxes.append(detection.bbox)
+                    confidences.append(detection.confidence)
+                    class_ids.append(detection.class_id)
                 
-                if class_id == class_names_inv['ball']:
-                    tracks['ball'][frame_num][1] = {"bbox": bbox}
+                # Create supervision Detections object
+                detection_supervision = sv.Detections(
+                    xyxy=np.array(bboxes),
+                    confidence=np.array(confidences),
+                    class_id=np.array(class_ids)
+                )
+                
+                # Class name mapping
+                class_names = {0: "player", 1: "ball", 2: "referee", 3: "goalkeeper"}
+                class_names_inv = {v.lower(): k for k, v in class_names.items()}
+                
+                # Convert goalkeeper to player for tracking
+                for object_idx, class_id in enumerate(detection_supervision.class_id):
+                    if class_names.get(class_id) == "goalkeeper":
+                        detection_supervision.class_id[object_idx] = class_names_inv['player']
+                
+                # Track objects using ByteTrack
+                detections_with_tracks = self.tracker.update_with_detections(detection_supervision)
+                
+                # Process tracked objects
+                for detection in detections_with_tracks:
+                    bbox = detection[0].tolist()
+                    class_id = detection[3]
+                    track_id = detection[4]
+                    
+                    if class_id == class_names_inv['player']:
+                        tracks['players'][frame_num][track_id] = {"bbox": bbox}
+                    elif class_id == class_names_inv['referee']:
+                        tracks['referees'][frame_num][track_id] = {"bbox": bbox}
+                
+                # Process ball detections (not tracked by ByteTrack)
+                for detection in detection_supervision:
+                    bbox = detection[0].tolist()
+                    class_id = detection[3]
+                    
+                    if class_id == class_names_inv['ball']:
+                        tracks['ball'][frame_num][1] = {"bbox": bbox}
         
         # Save to stub if requested
         if stub_path is not None:

@@ -25,7 +25,7 @@ from dataclasses import asdict
 project_root = Path(__file__).parent.parent.parent
 sys.path.append(str(project_root))
 
-from .model_monitor import MonitoringEvent
+from .entities import MonitoringEvent
 
 logger = logging.getLogger(__name__)
 

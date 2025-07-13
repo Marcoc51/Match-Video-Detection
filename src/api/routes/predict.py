@@ -16,7 +16,7 @@ from fastapi.responses import JSONResponse
 from ..models import ProcessingResult, FeatureConfig, ErrorResponse, ProcessingStatus
 from ..config import get_config
 from ..job_manager import get_job_manager, JobState
-from ..core.main import main
+from ...core.main import main
 
 router = APIRouter()
 
@@ -88,11 +88,15 @@ async def predict(
     # Create job
     job_id = job_manager.create_job(video.filename, features)
     
+    # Read video content before passing to background task
+    video_content = video.file.read()
+    
     # Start processing in background
     background_tasks.add_task(
         process_video_job,
         job_id,
-        video,
+        video_content,
+        video.filename,
         features
     )
     
@@ -112,13 +116,14 @@ async def predict(
     )
 
 
-async def process_video_job(job_id: int, video: UploadFile, features: FeatureConfig):
+async def process_video_job(job_id: int, video_content: bytes, filename: str, features: FeatureConfig):
     """
     Process a video job in the background.
     
     Args:
         job_id: The job ID
-        video: The uploaded video file
+        video_content: The video file content as bytes
+        filename: The original filename
         features: Feature configuration
     """
     config = get_config()
@@ -138,9 +143,9 @@ async def process_video_job(job_id: int, video: UploadFile, features: FeatureCon
             temp_path = Path(temp_dir)
             
             # Save uploaded video
-            video_path = temp_path / video.filename
+            video_path = temp_path / filename
             with open(video_path, "wb") as buffer:
-                shutil.copyfileobj(video.file, buffer)
+                buffer.write(video_content)
             
             # Update progress
             job_manager.update_job(job_id, progress=20, message="Video saved, starting analysis...")
@@ -168,7 +173,7 @@ async def process_video_job(job_id: int, video: UploadFile, features: FeatureCon
             job_manager.update_job(job_id, progress=90, message="Analysis complete, preparing results...")
             
             # Determine output file path
-            output_filename = f"analyzed_{Path(video.filename).stem}.mp4"
+            output_filename = f"analyzed_{Path(filename).stem}.mp4"
             output_path = Path(config.video_output_dir) / output_filename
             
             # Complete the job

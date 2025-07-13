@@ -4,7 +4,6 @@ Script to start the Match Video Detection API server.
 """
 
 import sys
-import subprocess
 from pathlib import Path
 
 def start_api():
@@ -55,10 +54,14 @@ def start_api():
         print("\nPress Ctrl+C to stop the server")
         print("=" * 50)
         
-        # Start the server
-        subprocess.run([
-            sys.executable, "-m", "src.api.main"
-        ])
+        # Start the server directly instead of using subprocess
+        import uvicorn
+        uvicorn.run(
+            "src.api.main:app",
+            host=config.host,
+            port=config.port,
+            reload=config.reload
+        )
         
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")

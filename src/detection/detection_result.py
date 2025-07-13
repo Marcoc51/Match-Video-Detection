@@ -230,6 +230,49 @@ class DetectionResult:
         ]
         return cls(detections)
     
+    @classmethod
+    def from_yolo_result(cls, yolo_result, frame_shape: Tuple[int, int, int]) -> 'DetectionResult':
+        """Create detection result from YOLO result.
+        
+        Args:
+            yolo_result: YOLO detection result
+            frame_shape: Shape of the original frame (height, width, channels)
+            
+        Returns:
+            DetectionResult instance
+        """
+        detections = []
+        
+        if hasattr(yolo_result, 'boxes') and yolo_result.boxes is not None:
+            boxes = yolo_result.boxes
+            
+            # Get coordinates, confidence, and class information
+            if hasattr(boxes, 'xyxy') and boxes.xyxy is not None:
+                bboxes = boxes.xyxy.cpu().numpy()
+                confidences = boxes.conf.cpu().numpy() if hasattr(boxes, 'conf') else np.ones(len(bboxes))
+                class_ids = boxes.cls.cpu().numpy() if hasattr(boxes, 'cls') else np.zeros(len(bboxes))
+                
+                # Class name mapping (adjust based on your model's classes)
+                class_names = {
+                    0: "player",
+                    1: "ball", 
+                    2: "referee",
+                    3: "goalkeeper"
+                }
+                
+                for i, (bbox, conf, class_id) in enumerate(zip(bboxes, confidences, class_ids)):
+                    class_name = class_names.get(int(class_id), f"class_{int(class_id)}")
+                    
+                    detection = Detection(
+                        bbox=bbox.tolist(),
+                        confidence=float(conf),
+                        class_id=int(class_id),
+                        class_name=class_name
+                    )
+                    detections.append(detection)
+        
+        return cls(detections)
+    
     def __len__(self) -> int:
         """Get number of detections."""
         return len(self.detections)

@@ -55,7 +55,8 @@ class YOLODetector:
         # Set model parameters
         self.model.conf = self.confidence_threshold
         self.model.iou = self.iou_threshold
-        self.model.device = self.device
+        # Device is set automatically in newer ultralytics versions
+        # self.model.device = self.device  # This line is removed for compatibility
         
         print(f"YOLO detector initialized with model: {model_path}")
         print(f"Confidence threshold: {self.confidence_threshold}")

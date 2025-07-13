@@ -12,6 +12,7 @@ from src.utils.colors import RED, BLUE, GREEN, YELLOW, WHITE, BLACK
 from src.utils.video_utils import read_video, save_video, draw_bezier_pass
 
 
+@pytest.mark.unit
 class TestBboxUtils:
     """Test bounding box utility functions."""
     
@@ -92,6 +93,7 @@ class TestBboxUtils:
             calculate_distance((100,), (200, 200))
 
 
+@pytest.mark.unit
 class TestColors:
     """Test color constants."""
     
@@ -114,6 +116,7 @@ class TestColors:
             assert all(0 <= c <= 255 for c in color)
 
 
+@pytest.mark.unit
 class TestVideoUtils:
     """Test video utility functions."""
     

@@ -327,4 +327,34 @@ def mock_video_writer():
         return True
     
     with patch('src.utils.video_utils.save_video', side_effect=mock_save_video):
-        yield mock_save_video 
+        yield mock_save_video
+
+
+@pytest.fixture
+def mock_config():
+    """Create a mock configuration for testing."""
+    mock_config = Mock()
+    mock_config.model_path = Path("models/yolo/best.pt")
+    mock_config.confidence_threshold = 0.5
+    mock_config.iou_threshold = 0.45
+    mock_config.YOLO_MODEL_PATH = Path("models/yolo/best.pt")
+    mock_config.CONFIDENCE_THRESHOLD = 0.5
+    mock_config.IOU_THRESHOLD = 0.45
+    return mock_config
+
+
+@pytest.fixture
+def mock_yolo_model():
+    """Create a mock YOLO model for testing."""
+    mock_model = Mock()
+    
+    # Mock prediction result
+    mock_result = Mock()
+    mock_result.boxes.xyxy = np.array([[100, 100, 200, 300], [300, 200, 320, 220]])
+    mock_result.boxes.conf = np.array([0.95, 0.88])
+    mock_result.boxes.cls = np.array([0, 1])
+    mock_result.names = {0: "player", 1: "ball"}
+    
+    mock_model.predict.return_value = [mock_result]
+    
+    return mock_model 
