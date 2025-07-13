@@ -3,12 +3,18 @@
 ## 🎯 Project Overview
 This project aims to detect and analyze football match events from videos using machine learning and computer vision. It is designed as an end-to-end MLOps pipeline aligned with the [MLOps Zoomcamp](https://github.com/DataTalksClub/mlops-zoomcamp) guidelines, while also serving as a working production system for FC Masar.
 
-We use object detection (YOLOv8), tracking, and rule-based or ML-based event detection to process match videos and extract key tactical metrics including:
+We use object detection (YOLO), tracking, and rule-based or ML-based event detection to process match videos and extract key tactical metrics, including:
 - **Player and ball tracking**
 - **Pass detection and visualization**
 - **Possession tracking**
 - **Cross detection**
 - **Team assignment**
+
+  
+
+https://github.com/user-attachments/assets/470e842d-20c1-4e5d-8af0-50680417c409
+
+
 
 ---
 
