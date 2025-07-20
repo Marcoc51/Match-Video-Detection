@@ -202,3 +202,10 @@ cython_debug/
 **/epoch20.pt
 **/epoch30.pt
 **/epoch40.pt
+
+training_outputs
+runs
+outputs
+models
+mlruns
+*db
